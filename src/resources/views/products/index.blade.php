@@ -5,24 +5,60 @@
 @endsection
 
 @section('content')
-<h2 style="margin-bottom: 24px;">商品一覧</h2>
-
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
-    @foreach ($products as $product)
-    <div style="border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background: #fff;">
-        <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}"
-            style="width: 100%; height: 200px; object-fit: cover;">
-        <div style="padding: 16px;">
-            <h3 style="margin-bottom: 8px;">{{ $product->name }}</h3>
-            <p style="margin: 4px 0;"><strong>価格：</strong>{{ $product->price }}円</p>
-            <p style="margin: 4px 0;"><strong>旬の季節：</strong>{{ $product->seasons->pluck('name')->join('、') }}</p>
-            <p style="margin-top: 8px; font-size: 14px; color: #555;">{{ $product->description }}</p>
-        </div>
-    </div>
-    @endforeach
+<!-- タイトル & 商品追加ボタン -->
+<div class="product-page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h2>商品一覧</h2>
+    <a href="{{ route('product.create') }}" class="btn btn-primary">＋ 商品を追加</a>
 </div>
 
-<div class="pagination-container">
+<!-- 本体：検索 + 商品カード -->
+<div class="product-page" style="display: flex; gap: 24px;">
+
+    <!-- 検索エリア -->
+    <div class="search-area" style="width: 300px;">
+        <form method="GET" action="{{ route('products.index') }}">
+            <input type="text" name="keyword" class="form-control mb-2" placeholder="商品名を入力" value="{{ request('keyword') }}">
+            <button type="submit" class="btn btn-warning mb-2">検索</button>
+
+            <select name="sort" class="form-select mb-2" onchange="this.form.submit()">
+                <option value="">価格順で表示</option>
+                <option value="high" {{ request('sort') == 'high' ? 'selected' : '' }}>高い順</option>
+                <option value="low" {{ request('sort') == 'low' ? 'selected' : '' }}>低い順</option>
+            </select>
+
+            @if(request('sort'))
+            <div class="sort-tag">
+                並び順:
+                <span class="sort-pill">
+                    {{ request('sort') == 'high' ? '高い順' : '低い順' }}
+                    <a href="{{ route('products.index', ['keyword' => request('keyword')]) }}" class="sort-remove">×</a>
+                </span>
+            </div>
+            @endif
+
+        </form>
+    </div>
+
+    <!-- 商品リスト -->
+    <div class="product-list" style="flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+        @foreach ($products as $product)
+        <a href="{{ url('/products/' . $product->id) }}" class="card-link" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $product->name }}</h5>
+                    <p class="card-text">価格: {{ $product->price }}円</p>
+                    <p class="card-text">旬の季節: {{ $product->seasons->pluck('name')->join('、') }}</p>
+                    <p class="card-text">{{ $product->description }}</p>
+                </div>
+            </div>
+        </a>
+        @endforeach
+    </div>
+</div>
+
+<!-- ページネーション -->
+<div class="pagination-container" style="display: flex; justify-content: center; margin-top: 24px;">
     {{ $products->links() }}
 </div>
 @endsection

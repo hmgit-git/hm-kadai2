@@ -17,11 +17,11 @@ use App\Http\Controllers\ProductController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/register', [ProductController::class, 'create']);
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/register', [ProductController::class, 'create'])->name('product.create');
 Route::post('/products/register', [ProductController::class, 'store']);
 Route::get('/products/{productId}', [ProductController::class, 'show']);
 Route::get('/products/{productId}/update', [ProductController::class, 'edit']);
 Route::post('/products/{productId}/update', [ProductController::class, 'update']);
-Route::get('/products/search', [ProductController::class, 'search']);
 Route::post('/products/{productId}/delete', [ProductController::class, 'destroy']);
+Route::get('/products/search', [ProductController::class, 'search']);
