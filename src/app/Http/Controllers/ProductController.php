@@ -70,7 +70,7 @@ class ProductController extends Controller
 
         return view('products.edit', compact('product', 'allSeasons'));
     }
-    
+
     public function destroy($productId)
     {
         $product = Product::findOrFail($productId);
