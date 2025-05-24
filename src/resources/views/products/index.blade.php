@@ -45,11 +45,9 @@
         <a href="{{ url('/products/' . $product->id) }}" class="card-link" style="text-decoration: none; color: inherit;">
             <div class="card">
                 <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $product->name }}</h5>
-                    <p class="card-text">価格: {{ $product->price }}円</p>
-                    <p class="card-text">旬の季節: {{ $product->seasons->pluck('name')->join('、') }}</p>
-                    <p class="card-text">{{ $product->description }}</p>
+                <div class="card-body" style="display: flex; justify-content: space-between; align-items: center; padding: 12px;">
+                    <h5 class="card-title" style="margin: 0;">{{ $product->name }}</h5>
+                    <p class="card-price" style="margin: 0;">{{ $product->price }}円</p>
                 </div>
             </div>
         </a>
